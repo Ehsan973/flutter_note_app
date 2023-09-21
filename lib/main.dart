@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:note_app/hive_exercises/car.dart';
 import 'package:note_app/hive_exercises/hive_screen.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:note_app/screens/add_task_screen.dart';
 import 'package:note_app/screens/home_screen.dart';
 import 'hive_exercises/student.dart';
 
@@ -28,7 +29,7 @@ class Application extends StatelessWidget {
         fontFamily: 'SM',
       ),
       debugShowCheckedModeBanner: false,
-      home: HomeScreen(),
+      home: AddTaskScreen(),
     );
   }
 }
