@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
+import 'package:note_app/task.dart';
 
 class AddTaskScreen extends StatefulWidget {
   const AddTaskScreen({super.key});
@@ -8,6 +10,11 @@ class AddTaskScreen extends StatefulWidget {
 }
 
 class _AddTaskScreenState extends State<AddTaskScreen> {
+  final TextEditingController _controllerTaskTitle = TextEditingController();
+  final TextEditingController _controllerTaskSubtitle = TextEditingController();
+
+  final taskBox = Hive.box<Task>('taskBox');
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -21,6 +28,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                 child: Directionality(
                   textDirection: TextDirection.rtl,
                   child: TextField(
+                    controller: _controllerTaskTitle,
                     decoration: InputDecoration(
                       label: Text(
                         'عنوان تسک',
@@ -60,6 +68,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                 child: Directionality(
                   textDirection: TextDirection.rtl,
                   child: TextField(
+                    controller: _controllerTaskSubtitle,
                     maxLines: 2,
                     decoration: InputDecoration(
                       label: Text(
@@ -99,7 +108,11 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 24),
                 child: ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    String taskTitle = _controllerTaskTitle.text;
+                    String taskSubtitle = _controllerTaskSubtitle.text;
+                    addTask(taskTitle, taskSubtitle);
+                  },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Color(0xff18DAA3),
                     minimumSize: Size(220, 50),
@@ -121,5 +134,12 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
         ),
       ),
     );
+  }
+
+  void addTask(String taskTitle, String taskSubtitle) {
+    if (taskTitle == '' || taskSubtitle == '') return;
+
+    var task = Task(title: taskTitle, subTitle: taskSubtitle);
+    taskBox.add(task);
   }
 }
