@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:msh_checkbox/msh_checkbox.dart';
 import 'package:note_app/screens/edit_task_screen.dart';
-import 'package:note_app/task.dart';
+
+import '../data/task.dart';
 
 class TaskWidget extends StatefulWidget {
   TaskWidget({super.key, required this.task});
@@ -63,7 +64,7 @@ class _TaskWidgetState extends State<TaskWidget> {
             SizedBox(
               width: 12,
             ),
-            Image.asset('images/workout.png'),
+            Image.asset(widget.task.taskType.image),
           ],
         ),
       ),
@@ -152,9 +153,9 @@ class _TaskWidgetState extends State<TaskWidget> {
             child: Padding(
               padding: const EdgeInsets.symmetric(
                 horizontal: 12,
-                vertical: 6,
               ),
               child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Text(
                     'ویرایش',

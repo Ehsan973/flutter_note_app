@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
-import 'package:note_app/task.dart';
+
+import 'package:note_app/util/utility.dart';
 import 'package:time_pickerr/time_pickerr.dart';
+
+import '../data/task.dart';
+import '../widgets/task_type_item.dart';
 
 class AddTaskScreen extends StatefulWidget {
   const AddTaskScreen({super.key});
@@ -17,6 +21,8 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
   final taskBox = Hive.box<Task>('taskBox');
   DateTime? _time;
 
+  int _selectedIndex = 0;
+
   @override
   void initState() {
     // TODO: implement initState
@@ -28,12 +34,15 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        child: Center(
+        child: SingleChildScrollView(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
+              SizedBox(
+                height: 20,
+              ),
               Padding(
-                padding: EdgeInsets.symmetric(horizontal: 44, vertical: 40),
+                padding: EdgeInsets.symmetric(horizontal: 44, vertical: 20),
                 child: Directionality(
                   textDirection: TextDirection.rtl,
                   child: TextField(
@@ -133,7 +142,27 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                   },
                 ),
               ),
-              Spacer(),
+              Container(
+                height: 170,
+                child: ListView.builder(
+                  scrollDirection: Axis.horizontal,
+                  itemCount: getTaskTypeList().length,
+                  itemBuilder: (context, index) {
+                    return GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          _selectedIndex = index;
+                        });
+                      },
+                      child: TaskTypeListItem(
+                        taskType: getTaskTypeList()[index],
+                        index: index,
+                        selectedIndex: _selectedIndex,
+                      ),
+                    );
+                  },
+                ),
+              ),
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 24),
                 child: ElevatedButton(
@@ -168,7 +197,12 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
   void addTask(String taskTitle, String taskSubtitle) {
     if (taskTitle == '' || taskSubtitle == '') return;
 
-    var task = Task(title: taskTitle, subTitle: taskSubtitle, time: _time!);
+    var task = Task(
+      title: taskTitle,
+      subTitle: taskSubtitle,
+      time: _time!,
+      taskType: getTaskTypeList()[_selectedIndex],
+    );
     taskBox.add(task);
     Navigator.pop(context);
   }

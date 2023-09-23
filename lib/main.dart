@@ -4,7 +4,9 @@ import 'package:note_app/hive_exercises/hive_screen.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:note_app/screens/add_task_screen.dart';
 import 'package:note_app/screens/home_screen.dart';
-import 'package:note_app/task.dart';
+import 'data/task.dart';
+import 'data/task_type.dart';
+import 'data/type_enum.dart';
 import 'hive_exercises/student.dart';
 
 void main() async {
@@ -19,6 +21,10 @@ void main() async {
 
   Hive.registerAdapter(TaskAdapter());
   await Hive.openBox<Task>('taskBox');
+
+  Hive.registerAdapter(TaskTypeAdapter());
+
+  Hive.registerAdapter(TaskTypeEnumAdapter());
 
   runApp(const Application());
 }
