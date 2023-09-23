@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:msh_checkbox/msh_checkbox.dart';
+import 'package:note_app/screens/edit_task_screen.dart';
 import 'package:note_app/task.dart';
 
 class TaskWidget extends StatefulWidget {
@@ -55,7 +56,7 @@ class _TaskWidgetState extends State<TaskWidget> {
                     overflow: TextOverflow.ellipsis,
                   ),
                   Spacer(),
-                  _getTimeEditButtons(),
+                  _getTimeEditButtons(widget.task),
                 ],
               ),
             ),
@@ -95,7 +96,7 @@ class _TaskWidgetState extends State<TaskWidget> {
     );
   }
 
-  Widget _getTimeEditButtons() {
+  Widget _getTimeEditButtons(Task task) {
     return Row(
       children: [
         Container(
@@ -113,9 +114,10 @@ class _TaskWidgetState extends State<TaskWidget> {
             child: Row(
               children: [
                 Text(
-                  '10:00',
+                  '${task.time.hour.toString().padLeft(2, '0')}:${task.time.minute.toString().padLeft(2, '0')}',
                   style: TextStyle(
                     color: Colors.white,
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
                 SizedBox(
@@ -131,33 +133,43 @@ class _TaskWidgetState extends State<TaskWidget> {
         SizedBox(
           width: 15,
         ),
-        Container(
-          width: 95,
-          height: 30,
-          decoration: BoxDecoration(
-            color: Color(0xffE2F6F1),
-            borderRadius: BorderRadius.circular(100),
-          ),
-          child: Padding(
-            padding: const EdgeInsets.symmetric(
-              horizontal: 12,
-              vertical: 6,
+        InkWell(
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => EditTaskScreen(task: widget.task),
+              ),
+            );
+          },
+          child: Container(
+            width: 95,
+            height: 30,
+            decoration: BoxDecoration(
+              color: Color(0xffE2F6F1),
+              borderRadius: BorderRadius.circular(100),
             ),
-            child: Row(
-              children: [
-                Text(
-                  'ویرایش',
-                  style: TextStyle(
-                    color: Color(0xff18DAA3),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(
+                horizontal: 12,
+                vertical: 6,
+              ),
+              child: Row(
+                children: [
+                  Text(
+                    'ویرایش',
+                    style: TextStyle(
+                      color: Color(0xff18DAA3),
+                    ),
                   ),
-                ),
-                SizedBox(
-                  width: 8,
-                ),
-                Image.asset(
-                  'images/icon_edit.png',
-                ),
-              ],
+                  SizedBox(
+                    width: 8,
+                  ),
+                  Image.asset(
+                    'images/icon_edit.png',
+                  ),
+                ],
+              ),
             ),
           ),
         ),

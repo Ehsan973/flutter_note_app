@@ -3,14 +3,16 @@ import 'package:hive/hive.dart';
 import 'package:note_app/task.dart';
 import 'package:time_pickerr/time_pickerr.dart';
 
-class AddTaskScreen extends StatefulWidget {
-  const AddTaskScreen({super.key});
+class EditTaskScreen extends StatefulWidget {
+  EditTaskScreen({super.key, required this.task});
+
+  Task task;
 
   @override
-  State<AddTaskScreen> createState() => _AddTaskScreenState();
+  State<EditTaskScreen> createState() => _EditTaskScreenState();
 }
 
-class _AddTaskScreenState extends State<AddTaskScreen> {
+class _EditTaskScreenState extends State<EditTaskScreen> {
   final TextEditingController _controllerTaskTitle = TextEditingController();
   final TextEditingController _controllerTaskSubtitle = TextEditingController();
 
@@ -21,7 +23,9 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    _time = DateTime.now();
+    _controllerTaskTitle.text = widget.task.title;
+    _controllerTaskSubtitle.text = widget.task.subTitle;
+    _time = widget.task.time;
   }
 
   @override
@@ -116,6 +120,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
               Directionality(
                 textDirection: TextDirection.rtl,
                 child: CustomHourPicker(
+                  date: _time,
                   title: 'زمان تسک را انتخاب کن',
                   negativeButtonText: 'حذف کن',
                   positiveButtonText: 'انتخاب کن',
@@ -140,7 +145,8 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                   onPressed: () {
                     String taskTitle = _controllerTaskTitle.text;
                     String taskSubtitle = _controllerTaskSubtitle.text;
-                    addTask(taskTitle, taskSubtitle);
+                    editTask(taskTitle, taskSubtitle);
+                    Navigator.pop(context);
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Color(0xff18DAA3),
@@ -150,7 +156,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                     ),
                   ),
                   child: Text(
-                    'اضافه کردن تسک',
+                    'ویرایش تسک',
                     style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
@@ -165,11 +171,11 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
     );
   }
 
-  void addTask(String taskTitle, String taskSubtitle) {
+  void editTask(String taskTitle, String taskSubtitle) {
     if (taskTitle == '' || taskSubtitle == '') return;
-
-    var task = Task(title: taskTitle, subTitle: taskSubtitle, time: _time!);
-    taskBox.add(task);
-    Navigator.pop(context);
+    widget.task.title = taskTitle;
+    widget.task.subTitle = taskSubtitle;
+    widget.task.time = _time!;
+    widget.task.save();
   }
 }
